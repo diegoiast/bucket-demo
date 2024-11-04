@@ -13,3 +13,5 @@
 .externalNativeBuild
 .cxx
 local.properties
+flaskserver/venv/
+flaskserver/__pycache__/
