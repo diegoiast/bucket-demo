@@ -13,6 +13,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -21,7 +25,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,12 +35,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.bucketexample.ui.theme.Test1Theme
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
-import androidx.compose.material3.*
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,31 +64,19 @@ fun MainContent(modifier: Modifier = Modifier) {
     var result by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
-
-    // New state variables for mode selection and IP address
     var selectedMode by remember { mutableStateOf("Local") }
     var ipAddress by remember { mutableStateOf("http://192.168.1.173:5000") }
 
-    // Create processor based on selected mode
     val processor = when (selectedMode) {
         "Local" -> remember { AndroidValueProcessor() }
         else -> remember(ipAddress) { RemoteValueProcessor(ipAddress) }
     }
-
-//    LaunchedEffect(processor) {
-//        try {
-//            processor.init()
-//        } catch (e: Exception) {
-//            println(e.message)
-//        }
-//    }
 
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        // Mode selection dropdown
         var expanded by remember { mutableStateOf(false) }
         val modes = listOf("Local", "Remote V1", "Remote V2")
 
@@ -121,7 +110,6 @@ fun MainContent(modifier: Modifier = Modifier) {
             }
         }
 
-        // IP address input field (visible only for remote modes)
         if (selectedMode != "Local") {
             TextField(
                 value = ipAddress,
@@ -133,7 +121,6 @@ fun MainContent(modifier: Modifier = Modifier) {
             )
         }
 
-        // Existing UI components
         TextField(
             value = text,
             onValueChange = { text = it },
@@ -221,7 +208,6 @@ fun randomize(): String {
 fun String.asFlow(): Flow<String> = flow {
     split(",").forEach { value ->
         emit(value.trim())
-//        delay(5) // Simulate delay between values in a stream
     }
 }
 

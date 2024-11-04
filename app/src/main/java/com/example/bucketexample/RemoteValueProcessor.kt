@@ -11,17 +11,15 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.IOException
 
 class RemoteValueProcessor(private val server: String) : ValueProcessor {
-    private val client = OkHttpClient()
-    private var trips : List<List<Double>> = mutableListOf()
-    private var itemCount = 0
-
     companion object {
         const val V1 = "v1"
         const val V2 = "v2"
     }
 
-    private var version = V1  // Default version
-
+    private val client = OkHttpClient()
+    private var trips : List<List<Double>> = mutableListOf()
+    private var itemCount = 0
+    private var version = V1
 
     fun setVersion(newVersion: String) {
         if (newVersion != V1 && newVersion != V2) {
@@ -80,8 +78,8 @@ class RemoteValueProcessor(private val server: String) : ValueProcessor {
                 trips
             }
         } catch (e: Exception) {
-            e.printStackTrace() // Log or handle the exception as needed
-            emptyList() // Return an empty list in case of error
+            e.printStackTrace()
+            emptyList()
         }
     }
 
